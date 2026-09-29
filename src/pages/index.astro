@@ -1,53 +1,67 @@
 ---
-import { listMessages } from "../lib/db";
-import "../styles.css";
+import Base from "../layouts/Base.astro";
+import { getStudentId } from "../lib/auth";
+import { CATEGORIES } from "../lib/categories";
+import { listOpenSlots } from "../lib/db";
 
-const messages = listMessages();
+const studentId = getStudentId(Astro.cookies);
+const slots = studentId ? listOpenSlots() : [];
+
+const slotLabel = (iso: string) =>
+  new Date(iso).toLocaleString("en-AU", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  });
 ---
 
-<!doctype html>
-<html lang="en-AU">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>COMP4020 prototype</title>
-  </head>
-  <body>
-    <nav aria-label="site">
-      <a href="/">Guestbook</a>
-      <a href="/readme/">About</a>
-    </nav>
-    <main>
-      <h1>Guestbook</h1>
+<Base title="Career Central — financial & contract advice">
+  <h1>Financial &amp; contract advice</h1>
+  <p>
+    Got a job offer to look over, or a question about tax or superannuation?
+    Submit the details below and pick a time — you'll get a confirmation page
+    that stays there when you come back to it.
+  </p>
+
+  {
+    !studentId ? (
       <p>
-        A minimal full-stack starter: messages live in SQLite on the machine's
-        volume (state survives a reload and a redeploy), and new messages
-        appear in every open tab over a server-sent-events stream — open this
-        page twice and sign it in one. Replace all of this with your own
-        prototype.
+        <a href="/login?next=/">Log in with your student ID</a> to book a
+        query — that's also what lets you find it again later under{" "}
+        <a href="/my-bookings">My bookings</a>.
       </p>
-      <form method="post" action="/api/messages">
-        <label for="body">Leave a message</label>
-        <input id="body" name="body" required maxlength="500" />
-        <button>Sign</button>
+    ) : slots.length === 0 ? (
+      <p>No advisor slots are open right now — check back soon.</p>
+    ) : (
+      <form method="post" action="/api/queries">
+        <div>
+          <label for="studentName">Your name</label>
+          <input id="studentName" name="studentName" required maxlength="200" />
+        </div>
+        <div>
+          <label for="category">What's this about?</label>
+          <select id="category" name="category" required>
+            {Object.entries(CATEGORIES).map(([value, label]) => (
+              <option value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label for="details">Tell us a bit more</label>
+          <textarea id="details" name="details" required maxlength="2000" rows="4" />
+        </div>
+        <div>
+          <label for="slotId">Pick a time</label>
+          <select id="slotId" name="slotId" required>
+            {slots.map((slot) => (
+              <option value={slot.id}>{slotLabel(slot.startsAt)}</option>
+            ))}
+          </select>
+        </div>
+        <button>Book</button>
       </form>
-      <ul id="messages">
-        {messages.map((message) => <li>{message.body}</li>)}
-      </ul>
-    </main>
-    <script>
-      // The live half of the demo: subscribe to the SSE stream and prepend
-      // messages as they arrive. The form itself needs none of this — its
-      // POST + redirect re-renders the submitting tab from SQLite; this
-      // stream is how every other tab finds out.
-      const list = document.querySelector("#messages");
-      const source = new EventSource("/api/events");
-      source.addEventListener("message", (event) => {
-        const message = JSON.parse(event.data);
-        const item = document.createElement("li");
-        item.textContent = message.body;
-        list?.prepend(item);
-      });
-    </script>
-  </body>
-</html>
+    )
+  }
+</Base>

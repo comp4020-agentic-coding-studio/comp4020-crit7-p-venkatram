@@ -1,0 +1,44 @@
+---
+import Base from "../layouts/Base.astro";
+import { getStudentId } from "../lib/auth";
+import { CATEGORIES } from "../lib/categories";
+import { listQueriesForStudent } from "../lib/db";
+
+const studentId = getStudentId(Astro.cookies);
+if (!studentId) {
+  return Astro.redirect("/login?next=/my-bookings", 303);
+}
+
+const bookings = listQueriesForStudent(studentId);
+
+const slotLabel = (iso: string) =>
+  new Date(iso).toLocaleString("en-AU", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+---
+
+<Base title="My bookings — Career Central">
+  <h1>My bookings</h1>
+  {
+    bookings.length === 0 ? (
+      <p>
+        No bookings yet — <a href="/">book a query</a>.
+      </p>
+    ) : (
+      <ul>
+        {bookings.map((booking) => (
+          <li>
+            <a href={`/queries/${booking.id}`}>
+              {CATEGORIES[booking.category as keyof typeof CATEGORIES]} —{" "}
+              {slotLabel(booking.slot.startsAt)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Base>

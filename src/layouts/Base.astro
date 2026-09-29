@@ -1,0 +1,44 @@
+---
+import { getStudentId } from "../lib/auth";
+import "../styles.css";
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const studentId = getStudentId(Astro.cookies);
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <nav aria-label="site">
+      <a href="/">Book</a>
+      <a href="/guides/">Guides</a>
+      <a href="/readme/">About</a>
+      <span class="account">
+        {
+          studentId ? (
+            <>
+              <a href="/my-bookings">My bookings</a>
+              <span>{studentId}</span>
+              <form method="post" action="/api/logout">
+                <button type="submit">Log out</button>
+              </form>
+            </>
+          ) : (
+            <a href="/login">Log in</a>
+          )
+        }
+      </span>
+    </nav>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

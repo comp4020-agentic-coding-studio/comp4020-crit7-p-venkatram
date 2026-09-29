@@ -8,6 +8,27 @@
       "when": 1784173013185,
       "tag": "0000_dry_captain_flint",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790722200659,
+      "tag": "0001_add_advisor_slots_and_queries",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790722210707,
+      "tag": "0002_drop_messages",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790723268479,
+      "tag": "0003_add_student_id_to_queries",
+      "breakpoints": true
     }
   ]
 }

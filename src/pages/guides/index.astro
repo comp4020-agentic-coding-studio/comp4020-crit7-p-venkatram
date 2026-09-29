@@ -1,0 +1,52 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const guides = [
+  {
+    href: "/guides/getting-set-up/",
+    title: "Getting set up: ABN, TFN and WWVP",
+    blurb: "The three numbers and checks most first jobs or gigs ask for.",
+  },
+  {
+    href: "/guides/volunteering/",
+    title: "Volunteering and the ANU+ award",
+    blurb: "Skilled vs unskilled volunteering, and how ANU+ recognises it.",
+  },
+  {
+    href: "/guides/job-types/",
+    title: "Kinds of work in Australia",
+    blurb: "Casual, part-time, full-time, fixed-term, internships and more.",
+  },
+  {
+    href: "/guides/contracts/",
+    title: "Reading a contract before you sign",
+    blurb: "What to check in an offer, and what to do before you accept.",
+  },
+  {
+    href: "/guides/money/",
+    title: "Money basics for your first job",
+    blurb: "Payslips, tax, super and building a habit that survives payday.",
+  },
+];
+---
+
+<Base title="Guides — Career Central">
+  <h1>Guides</h1>
+  <p>
+    Background reading for the questions that come up most before a first
+    job or a volunteering role. None of this replaces a proper look at your
+    situation — for that, <a href="/">book a query</a>.
+  </p>
+  <ul class="guide-list">
+    {
+      guides.map((guide) => (
+        <li>
+          <a href={guide.href}>
+            <strong>{guide.title}</strong>
+          </a>
+          <p>{guide.blurb}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

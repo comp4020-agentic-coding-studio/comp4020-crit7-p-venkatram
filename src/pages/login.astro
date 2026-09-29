@@ -1,0 +1,41 @@
+---
+import Base from "../layouts/Base.astro";
+import { getStudentId } from "../lib/auth";
+
+const next = Astro.url.searchParams.get("next") ?? "/";
+const studentId = getStudentId(Astro.cookies);
+---
+
+<Base title="Log in — Career Central">
+  <h1>Log in</h1>
+  {
+    studentId ? (
+      <p>
+        You're already logged in as <strong>{studentId}</strong>. <a href={next}>Continue</a>.
+      </p>
+    ) : (
+      <>
+        <p>
+          This is a class prototype, not the real ANU login — it just remembers
+          the student ID you type below, with no password check. Don't use a
+          real password here, because there isn't one to check.
+        </p>
+        <form method="post" action="/api/login">
+          <div>
+            <label for="studentId">Student ID</label>
+            <input
+              id="studentId"
+              name="studentId"
+              required
+              placeholder="u1234567"
+              pattern="^[uU]\d{7}$"
+              title="Your ANU ID, e.g. u1234567"
+            />
+          </div>
+          <input type="hidden" name="next" value={next} />
+          <button>Log in</button>
+        </form>
+      </>
+    )
+  }
+</Base>

@@ -1,0 +1,40 @@
+---
+import Base from "../../layouts/Base.astro";
+import { CATEGORIES } from "../../lib/categories";
+import { getQuery } from "../../lib/db";
+
+const idParam = Astro.params.id;
+const id = Number(idParam);
+const query = Number.isInteger(id) ? getQuery(id) : undefined;
+
+if (!query) {
+  return new Response(null, { status: 404, statusText: "Not found" });
+}
+
+const slotLabel = new Date(query.slot.startsAt).toLocaleString("en-AU", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  hour: "numeric",
+  minute: "2-digit",
+});
+---
+
+<Base title="Booking confirmed — Career Central">
+  <h1>Booking confirmed</h1>
+  <p>
+    Bookmark this page — it's your confirmation, and it'll still be here if
+    you come back later. It's also listed under
+    <a href="/my-bookings">My bookings</a>.
+  </p>
+  <dl>
+    <dt>Name</dt>
+    <dd>{query.studentName}</dd>
+    <dt>Category</dt>
+    <dd>{CATEGORIES[query.category as keyof typeof CATEGORIES]}</dd>
+    <dt>Details</dt>
+    <dd>{query.details}</dd>
+    <dt>Appointment</dt>
+    <dd>{slotLabel}</dd>
+  </dl>
+</Base>

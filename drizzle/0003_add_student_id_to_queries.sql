@@ -1,0 +1,1 @@
+ALTER TABLE `queries` ADD `student_id` text NOT NULL;
