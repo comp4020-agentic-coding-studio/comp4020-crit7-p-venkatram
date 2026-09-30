@@ -1,54 +1,36 @@
 # Process overview
 
-<!-- TEMPLATE: this file is a shape to fill in, not a form. Replace everything
-     in it with your own overview, and delete this comment — `pnpm
-     check:evidence` will remind you if it's still here. -->
-
-Written by you, for a reader: how you got from the brief to the harness and
-agentic workflow behind this submission. Markers read this file and follow its
-citations; they don't trawl the repo for evidence you didn't point at.
-
-This file is the shape; the course site's
-[assessment page](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/topics/assessment/#what-you-submit)
-is the requirement, and its
-[word counts](https://comp.anu.edu.au/courses/comp4020-agentic-coding-studio/topics/assessment/#word-counts)
-cover every deliverable.
-
 ## What I built
 
-A sentence or two. `README.md` is where the account of what the app is and what
-good means here lives; this file is how you got there.
+A Career Central prototype: student-ID-gated coaching bookings, five
+guides, a curated jobs directory, and a community show-of-hands — expanded
+from a single booking slice into a small hub.
 
 ## How I got here
 
-The account of the process: how the work actually went, and how you knew the
-result was right. Tell it in whatever order makes it clear. A weekly prototype
-needs a paragraph or two; an assignment needs more.
+I started narrow: a login-gated booking flow for financial/contract
+queries, each booking landing on its own confirmation page rather than a
+shared board, for privacy
+([`70c4965`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit7-p-venkatram/commit/70c4965)).
 
-Cite the record as you go, as links whose text is the commit hash or range and
-whose target is this repo's commit or compare URL, so a reader clicks straight
-to the evidence:
+To explore a fuller product vision, I ran Wix's AI site-builder through its
+own onboarding questions and used the brief it generated as a starting
+prompt. It came back wanting job listings, "Wix Groups," and a fabricated
+student success story — none of which fit this stack or the course's
+honesty bar. Before building, I set three guardrails: real external
+job-board links instead of invented postings, a native join/leave
+interest-tally instead of literal Wix Groups, and an explicitly-labelled
+illustrative testimonial with no real name or photo
+([`577c248`](https://github.com/comp4020-agentic-coding-studio/comp4020-crit7-p-venkatram/commit/577c248)).
 
-- one commit: [`a1b2c3d`](https://github.com/YOUR-ORG/YOUR-REPO/commit/a1b2c3d)
-- a range:
-  [`a1b2c3d...e4f5a6b`](https://github.com/YOUR-ORG/YOUR-REPO/compare/a1b2c3d...e4f5a6b)
+Getting the look right took several rounds I had to call out directly: a
+nav that wrapped at normal widths, a "symmetric" pass that stranded an odd
+card alone in guides and centred a page I wanted left-aligned instead, and
+a raw student ID leaking into the nav. Each fix was checked against a live
+localhost run, not just the 119-test suite.
 
-To pair a prompt with the commit it produced, quote the prompt (curated, not a
-full transcript) next to the citation:
-
-> the prompt, verbatim
-
-Screenshots are welcome where one carries the point better than a sentence does.
-Commit the file to this repo and link it with a **relative** path, which is what
-makes it render on GitHub: `![alt text](docs/before.png)`. Images don't count
-towards the word count and don't replace the citation.
-
-## Before you ship
-
-`pnpm check:evidence` verifies that this comment is gone, that your citations
-resolve to real commits, that a crit week's reflection entry is in
-`reflections/`, and that your `CLAUDE.md` is there. It checks that your account
-is traceable, not that it is good: that is the marker's call.
-
-Images aren't checked: unlike a citation whose SHA doesn't resolve, a broken
-image is visible the moment this file is rendered on GitHub.
+I checked ANU's real Career Central site myself for the flow it actually
+offers, which shaped what this adds rather than duplicates. Facts in the
+guides (ANU+ mechanics, the super rate, the job-board URLs) were checked
+while writing them, but a fuller fact-check pass is still outstanding
+before this ships.
