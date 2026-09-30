@@ -7,6 +7,7 @@ const studentId = getStudentId(Astro.cookies);
 ---
 
 <Base title="Log in — Career Central">
+  <div class="prose">
   <h1>Log in</h1>
   {
     studentId ? (
@@ -38,4 +39,5 @@ const studentId = getStudentId(Astro.cookies);
       </>
     )
   }
+  </div>
 </Base>

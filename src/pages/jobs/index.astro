@@ -1,0 +1,36 @@
+---
+import Base from "../../layouts/Base.astro";
+import { listJobListings } from "../../lib/db";
+
+const listings = listJobListings();
+---
+
+<Base title="Job listings — Career Central">
+  <div class="prose">
+  <h1>Job listings</h1>
+  <p>
+    This isn't a job board of its own — it's a short, honest directory of
+    where the real listings already live, so you're not searching five sites
+    to find them.
+  </p>
+  </div>
+  <ul class="job-list">
+    {
+      listings.map((listing) => (
+        <li>
+          <a href={listing.url} target="_blank" rel="noopener noreferrer">
+            <strong>{listing.title}</strong>
+            <span class="job-source">{listing.source} ↗</span>
+          </a>
+          <p>{listing.blurb}</p>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="prose">
+  <p>
+    Found something and not sure whether the offer stacks up? <a href="/coaching">Book a coaching session</a>{" "}
+    before you sign, or read <a href="/guides/contracts/">reviewing a contract</a> first.
+  </p>
+  </div>
+</Base>

@@ -1,0 +1,69 @@
+---
+import Base from "../layouts/Base.astro";
+import { getStudentId } from "../lib/auth";
+import { CATEGORIES } from "../lib/categories";
+import { listOpenSlots } from "../lib/db";
+
+const studentId = getStudentId(Astro.cookies);
+const slots = studentId ? listOpenSlots() : [];
+
+const slotLabel = (iso: string) =>
+  new Date(iso).toLocaleString("en-AU", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+---
+
+<Base title="1:1 Coaching — Career Central">
+  <div class="prose">
+  <h1>1:1 coaching</h1>
+  <p>
+    Got a job offer to look over, or a question about tax or superannuation?
+    Submit the details below and pick a time with an advisor — you'll get a
+    confirmation page that stays there when you come back to it.
+  </p>
+
+  {
+    !studentId ? (
+      <p>
+        <a href="/login?next=/coaching">Log in with your student ID</a> to
+        book a session — that's also what lets you find it again later under{" "}
+        <a href="/my-bookings">My bookings</a>.
+      </p>
+    ) : slots.length === 0 ? (
+      <p>No advisor slots are open right now — check back soon.</p>
+    ) : (
+      <form method="post" action="/api/queries">
+        <div>
+          <label for="studentName">Your name</label>
+          <input id="studentName" name="studentName" required maxlength="200" />
+        </div>
+        <div>
+          <label for="category">What's this about?</label>
+          <select id="category" name="category" required>
+            {Object.entries(CATEGORIES).map(([value, label]) => (
+              <option value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label for="details">Tell us a bit more</label>
+          <textarea id="details" name="details" required maxlength="2000" rows="4" />
+        </div>
+        <div>
+          <label for="slotId">Pick a time</label>
+          <select id="slotId" name="slotId" required>
+            {slots.map((slot) => (
+              <option value={slot.id}>{slotLabel(slot.startsAt)}</option>
+            ))}
+          </select>
+        </div>
+        <button>Book</button>
+      </form>
+    )
+  }
+  </div>
+</Base>

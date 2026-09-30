@@ -27,5 +27,29 @@ export const queries = sqliteTable("queries", {
     .default(sql`(datetime('now'))`),
 });
 
+// A curated directory of real external job boards, not scraped or invented
+// listings — see README.md for why. Seeded once at boot, same as
+// advisor_slots.
+export const jobListings = sqliteTable("job_listings", {
+  id: int().primaryKey({ autoIncrement: true }),
+  title: text().notNull(),
+  source: text().notNull(),
+  url: text().notNull(),
+  blurb: text().notNull(),
+});
+
+// Interest, not posts: a student joins a fixed topic (src/lib/community.ts)
+// rather than writing free text, so there's nothing here that needs
+// moderation.
+export const communityInterest = sqliteTable("community_interest", {
+  id: int().primaryKey({ autoIncrement: true }),
+  topic: text().notNull(),
+  studentId: text("student_id").notNull(),
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`(datetime('now'))`),
+});
+
 export type AdvisorSlot = typeof advisorSlots.$inferSelect;
 export type Query = typeof queries.$inferSelect;
+export type JobListing = typeof jobListings.$inferSelect;

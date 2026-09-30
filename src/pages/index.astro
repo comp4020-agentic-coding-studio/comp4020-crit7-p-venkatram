@@ -1,67 +1,104 @@
 ---
 import Base from "../layouts/Base.astro";
-import { getStudentId } from "../lib/auth";
-import { CATEGORIES } from "../lib/categories";
-import { listOpenSlots } from "../lib/db";
 
-const studentId = getStudentId(Astro.cookies);
-const slots = studentId ? listOpenSlots() : [];
+// Hand-drawn inline icons in the ANU palette — no external image files, no
+// stock photos of people. Each is a simple line-icon sized by .feature-icon.
+const ICONS: Record<string, string> = {
+  coaching: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 4V5z"/></svg>`,
+  resources: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6c-2-1.5-5-2-8-1.5v13c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-13c-3-.5-6 0-8 1.5z"/><path d="M12 6v13"/></svg>`,
+  jobs: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 13h18"/></svg>`,
+  community: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20c.5-3.5 3-5.5 5.5-5.5s5 2 5.5 5.5"/><path d="M14.5 20c.3-2.5 1.8-4 3.5-4.3"/></svg>`,
+};
 
-const slotLabel = (iso: string) =>
-  new Date(iso).toLocaleString("en-AU", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+const features = [
+  {
+    href: "/coaching",
+    title: "1:1 coaching",
+    blurb: "Book time with an advisor to review a contract, or talk through tax and super questions.",
+    icon: "coaching",
+  },
+  {
+    href: "/guides/",
+    title: "Free resources",
+    blurb: "Guides on getting set up (ABN/TFN/WWVP), volunteering, job types, contracts, and money basics.",
+    icon: "resources",
+  },
+  {
+    href: "/jobs/",
+    title: "Job listings",
+    blurb: "A curated directory of where ANU students' real job and internship listings actually live.",
+    icon: "jobs",
+  },
+  {
+    href: "/community/",
+    title: "Community",
+    blurb: "Find peers working through the same things — contract reviews, tax questions, interview prep.",
+    icon: "community",
+  },
+] as const;
 ---
 
-<Base title="Career Central — financial & contract advice">
-  <h1>Financial &amp; contract advice</h1>
-  <p>
-    Got a job offer to look over, or a question about tax or superannuation?
-    Submit the details below and pick a time — you'll get a confirmation page
-    that stays there when you come back to it.
-  </p>
+<Base title="Career Central — ANU">
+  <section class="hero">
+    <div class="hero-mark" aria-hidden="true">
+      <svg viewBox="0 0 120 120" role="presentation">
+        <rect
+          x="20"
+          y="20"
+          width="80"
+          height="80"
+          rx="4"
+          transform="rotate(45 60 60)"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="3"
+        ></rect>
+        <rect x="46" y="46" width="28" height="28" rx="2" transform="rotate(45 60 60)" fill="var(--gold)"
+        ></rect>
+      </svg>
+    </div>
+    <h1>Your go-to place for landing a job in Australia</h1>
+    <p class="lede">
+      One-on-one coaching, plain-English guides, a curated jobs directory, and
+      a community of ANU students working through the same first-job
+      questions — contracts, tax, super, and everything around them.
+    </p>
+    <div class="hero-actions">
+      <a class="cta" href="/coaching">Book 1:1 coaching</a>
+      <a class="cta-secondary" href="/guides/">Browse free resources</a>
+    </div>
+  </section>
 
-  {
-    !studentId ? (
+  <section class="features" aria-label="What Career Central offers">
+    {
+      features.map((feature) => (
+        <a class="feature-card" href={feature.href}>
+          <Fragment set:html={`<span class="feature-icon" aria-hidden="true">${ICONS[feature.icon]}</span>`} />
+          <strong>{feature.title}</strong>
+          <p>{feature.blurb}</p>
+        </a>
+      ))
+    }
+  </section>
+
+  <section class="success-story" aria-label="Illustrative example">
+    <span class="avatar" aria-hidden="true">JT</span>
+    <div>
+      <p class="story-label">Illustrative example, not a real named individual</p>
       <p>
-        <a href="/login?next=/">Log in with your student ID</a> to book a
-        query — that's also what lets you find it again later under{" "}
-        <a href="/my-bookings">My bookings</a>.
+        "A COMP8830 internship gave me real code to point to, but the offer
+        letter that followed had clauses I'd never seen — restraint of trade,
+        a training-cost clawback. Booking a coaching session before I signed
+        meant someone actually read it with me. That internship became a
+        graduate role six months later."
       </p>
-    ) : slots.length === 0 ? (
-      <p>No advisor slots are open right now — check back soon.</p>
-    ) : (
-      <form method="post" action="/api/queries">
-        <div>
-          <label for="studentName">Your name</label>
-          <input id="studentName" name="studentName" required maxlength="200" />
-        </div>
-        <div>
-          <label for="category">What's this about?</label>
-          <select id="category" name="category" required>
-            {Object.entries(CATEGORIES).map(([value, label]) => (
-              <option value={value}>{label}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label for="details">Tell us a bit more</label>
-          <textarea id="details" name="details" required maxlength="2000" rows="4" />
-        </div>
-        <div>
-          <label for="slotId">Pick a time</label>
-          <select id="slotId" name="slotId" required>
-            {slots.map((slot) => (
-              <option value={slot.id}>{slotLabel(slot.startsAt)}</option>
-            ))}
-          </select>
-        </div>
-        <button>Book</button>
-      </form>
-    )
-  }
+    </div>
+  </section>
+
+  <section class="closing-cta">
+    <h2>Got an offer sitting in your inbox right now?</h2>
+    <p>
+      <a href="/coaching">Book a coaching session</a> before you sign anything.
+    </p>
+  </section>
 </Base>

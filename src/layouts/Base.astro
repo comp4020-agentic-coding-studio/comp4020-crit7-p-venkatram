@@ -7,6 +7,17 @@ interface Props {
 }
 const { title } = Astro.props;
 const studentId = getStudentId(Astro.cookies);
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/coaching", label: "Coaching" },
+  { href: "/guides/", label: "Resources" },
+  { href: "/jobs/", label: "Jobs" },
+  { href: "/community/", label: "Community" },
+  { href: "/readme/", label: "About" },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 ---
 
 <!doctype html>
@@ -15,30 +26,52 @@ const studentId = getStudentId(Astro.cookies);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,500;0,600;1,500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <nav aria-label="site">
-      <a href="/">Book</a>
-      <a href="/guides/">Guides</a>
-      <a href="/readme/">About</a>
-      <span class="account">
-        {
-          studentId ? (
-            <>
-              <a href="/my-bookings">My bookings</a>
-              <span>{studentId}</span>
-              <form method="post" action="/api/logout">
-                <button type="submit">Log out</button>
-              </form>
-            </>
-          ) : (
-            <a href="/login">Log in</a>
-          )
-        }
-      </span>
-    </nav>
+    <header class="site-header">
+      <nav aria-label="site">
+        <span class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          Career Central
+        </span>
+        <div class="links">
+          {
+            navLinks.map((link) => (
+              <a href={link.href} aria-current={isActive(link.href) ? "page" : undefined}>
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+        <span class="account">
+          {
+            studentId ? (
+              <>
+                <a href="/my-bookings">My bookings</a>
+                <form method="post" action="/api/logout">
+                  <button type="submit">Log out</button>
+                </form>
+              </>
+            ) : (
+              <a class="log-in" href="/login">
+                Log in
+              </a>
+            )
+          }
+        </span>
+      </nav>
+    </header>
     <main>
       <slot />
     </main>
+    <footer class="site-footer">
+      <p>COMP4020 class prototype — not an official ANU service.</p>
+    </footer>
   </body>
 </html>

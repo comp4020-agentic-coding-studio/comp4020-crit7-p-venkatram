@@ -1,36 +1,146 @@
-body {
-  margin: 0;
-  padding: 2rem;
-  font-family: system-ui, sans-serif;
-  line-height: 1.6;
-  color: #1a1a1a;
+/* ANU's own style guide only publishes CMYK/Pantone (30/50/70/40 gold,
+   Pantone 463/8620) — these hex values are the standard web approximation of
+   that gold, split into two tones so contrast holds in both directions:
+   --gold for accents and text-on-black, --gold-ink (darker) for text-on-white
+   links, which the brighter gold fails at normal text size. */
+:root {
+  --black: #111111;
+  --gold: #c08a1e;
+  --gold-light: #e3b34c;
+  --gold-ink: #7a5410;
+  --paper: #ffffff;
+  --paper-tint: #faf6ec;
+  --line: #e4dcc8;
+  --text: #1a1a1a;
+  --text-muted: #55503f;
 }
 
-main {
-  max-width: 40rem;
-  margin: 0 auto;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--paper);
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2rem;
+  margin: 0 0 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 3px solid var(--gold);
+}
+
+h2 {
+  font-size: 1.3rem;
+  margin: 2rem 0 0.5rem;
 }
 
 a {
-  color: #0b5fff;
+  color: var(--gold-ink);
 }
 
+a:hover {
+  color: var(--black);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-ink);
+  outline-offset: 2px;
+}
+
+/* Header & nav — ANU's black-and-gold, edge to edge above the content card */
+.site-header {
+  background: var(--black);
+  border-bottom: 4px solid var(--gold);
+}
+
+/* Wider than main's reading-width card on purpose — a handful of short nav
+   labels needs room, not a text measure, and this is what stops them
+   wrapping onto a cramped second line at normal desktop widths. */
 nav {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  max-width: 40rem;
-  margin: 0 auto 1.5rem;
+  gap: 2rem;
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 1.1rem 2rem;
+}
+
+nav .links {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+
+nav a {
+  color: #f2ede0;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 0.3rem;
+  border-bottom: 2px solid transparent;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: var(--gold-light);
+}
+
+/* The current page's nav item — a persistent marker, not just a hover
+   state, so it still reads as "you are here" once the mouse moves away. */
+nav a[aria-current="page"] {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold-light);
+}
+
+nav .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--paper);
+  letter-spacing: 0.01em;
+}
+
+.brand-mark {
+  width: 0.7rem;
+  height: 0.7rem;
+  background: var(--gold);
+  display: inline-block;
+  transform: rotate(45deg);
 }
 
 nav .account {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1.25rem;
   margin-inline-start: auto;
-  font-size: 0.9rem;
-  color: #444;
+}
+
+nav .account a.log-in {
+  color: var(--gold-light);
 }
 
 nav .account form {
@@ -41,15 +151,58 @@ nav .account button {
   border: none;
   background: none;
   padding: 0;
-  color: #0b5fff;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gold-light);
   text-decoration: underline;
   cursor: pointer;
 }
 
+nav .account button:hover {
+  color: var(--paper);
+}
+
+/* The page canvas — as wide as the nav above it, so the site uses the whole
+   viewport rather than floating a narrow card in a sea of background. Prose
+   (paragraphs, guide text, forms) gets its own narrower measure below via
+   .prose, rather than stretching edge to edge and becoming unreadable. */
+main {
+  max-width: 75rem;
+  margin: 2rem auto;
+  padding: 0 2rem 3rem;
+}
+
+main p {
+  color: var(--text-muted);
+}
+
+main strong {
+  color: var(--text);
+}
+
+/* A comfortable reading measure for long-form text, used inside the wide
+   main canvas above — grids (guide/job/topic lists, feature cards) stay
+   outside it and use the full width instead. */
+.prose {
+  max-width: 42rem;
+}
+
+.site-footer {
+  max-width: 75rem;
+  margin: 0 auto 2.5rem;
+  padding: 0 2rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* Forms */
 main form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.1rem;
   margin-block: 1.5rem;
   max-width: 30rem;
 }
@@ -57,50 +210,395 @@ main form {
 main form > div {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.35rem;
 }
 
 label {
   font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--black);
 }
 
 input,
 select,
 textarea {
-  padding: 0.4rem 0.6rem;
+  padding: 0.5rem 0.7rem;
   font: inherit;
   font-family: inherit;
+  border: 1px solid #c9c2a8;
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--text);
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--gold-ink);
 }
 
 main form button {
   align-self: start;
-  padding: 0.4rem 1.2rem;
+  padding: 0.55rem 1.4rem;
   font: inherit;
+  font-weight: 600;
+  background: var(--gold);
+  color: var(--black);
+  border: 1px solid var(--gold-ink);
+  border-radius: 2px;
+  cursor: pointer;
 }
 
+main form button:hover {
+  background: var(--gold-light);
+}
+
+/* Booking confirmation */
 dl {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.4rem 1rem;
+  gap: 0.6rem 1.25rem;
+  padding: 1.1rem 1.4rem;
+  margin: 1.25rem 0;
+  max-width: 34rem;
+  background: var(--paper-tint);
+  border-left: 4px solid var(--gold);
 }
 
 dt {
   font-weight: 600;
+  color: var(--black);
 }
 
 dd {
   margin: 0;
 }
 
+/* Guide cards — left-aligned, deliberately, unlike the other card lists:
+   flex-wrap so cards size consistently, but flex-start keeps every row
+   starting at the same left edge as the heading above it. */
 .guide-list {
   list-style: none;
   padding: 0;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 1.25rem;
 }
 
+.guide-list li {
+  flex: 0 1 16rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  padding: 0.9rem 1.1rem;
+  transition: box-shadow 0.15s ease;
+}
+
+.guide-list li:hover {
+  box-shadow: 0 2px 8px rgba(17, 17, 17, 0.08);
+}
+
+.guide-list a {
+  text-decoration: none;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.05rem;
+}
+
+.guide-list a strong {
+  color: var(--gold-ink);
+}
+
+.guide-list a:hover strong {
+  color: var(--black);
+}
+
 .guide-list p {
-  margin: 0.25rem 0 0;
-  color: #444;
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+}
+
+/* My bookings */
+main ul:not(.guide-list):not(.job-list):not(.topic-list) {
+  padding-inline-start: 1.2rem;
+}
+
+main ul:not(.guide-list):not(.job-list):not(.topic-list) li {
+  margin-bottom: 0.4rem;
+}
+
+/* Landing page hero */
+.hero {
+  text-align: center;
+  padding-block: 0.5rem 1rem;
+}
+
+.hero-mark svg {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero h1 {
+  border-bottom: none;
+  font-size: 1.8rem;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+
+.hero .lede {
+  max-width: 30rem;
+  margin: 0.75rem auto 1.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cta,
+.cta-secondary {
+  display: inline-block;
+  min-width: 13rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 2px;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cta {
+  background: var(--gold);
+  color: var(--black);
+  border: 1px solid var(--gold-ink);
+}
+
+.cta:hover {
+  background: var(--gold-light);
+  color: var(--black);
+}
+
+.cta-secondary {
+  background: none;
+  color: var(--gold-ink);
+  border: 1px solid var(--line);
+}
+
+.cta-secondary:hover {
+  border-color: var(--gold-ink);
+  color: var(--black);
+}
+
+/* Feature cards — same wrapping, self-centering row layout as the other
+   card lists, so all four card types across the site size and wrap
+   identically. */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 2rem 0;
+}
+
+.feature-card {
+  display: flex;
+  flex: 0 1 16rem;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--gold);
+  text-decoration: none;
+  color: var(--text);
+  transition: box-shadow 0.15s ease;
+}
+
+.feature-card:hover {
+  box-shadow: 0 3px 10px rgba(17, 17, 17, 0.08);
+}
+
+.feature-card strong {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--black);
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.feature-icon svg {
+  width: 1.9rem;
+  height: 1.9rem;
+  color: var(--gold-ink);
+}
+
+/* Success story — capped and centered so it reads as a quote card, not a
+   banner stretched across the full width of the page. */
+.success-story {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  max-width: 46rem;
+  padding: 1.25rem;
+  margin: 2rem auto;
+  background: var(--paper-tint);
+  border-left: 4px solid var(--gold);
+}
+
+.avatar {
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--black);
+  font-weight: 700;
+  font-family: "Newsreader", Georgia, serif;
+}
+
+.story-label {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--gold-ink);
+  font-weight: 600;
+}
+
+.success-story p:last-child {
+  margin: 0;
+  font-style: italic;
+}
+
+.closing-cta {
+  max-width: 46rem;
+  margin-inline: auto;
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.closing-cta h2 {
+  margin-top: 0;
+}
+
+/* Job listings — same wrapping, self-centering row layout as guide cards */
+.job-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.job-list li {
+  flex: 0 1 16rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold);
+  padding: 0.9rem 1.1rem;
+}
+
+.job-list a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: flex-start;
+  text-decoration: none;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.05rem;
+}
+
+.job-list a strong {
+  color: var(--black);
+}
+
+.job-source {
+  flex: none;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: var(--gold-ink);
+  white-space: nowrap;
+}
+
+.job-list p {
+  margin: 0.3rem 0 0;
+  font-size: 0.92rem;
+}
+
+/* Community topics — same wrapping, self-centering row layout, each topic a
+   small card rather than a wide row now that main has room for several per
+   line. */
+.topic-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.topic-list li {
+  display: flex;
+  flex: 0 1 16rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.7rem;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--gold);
+  padding: 1rem 1.1rem;
+}
+
+.topic-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.topic-label {
+  font-weight: 600;
+  color: var(--black);
+}
+
+.topic-count {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* Cards in a row stretch to equal height by default (flex's align-items:
+   stretch); pushing the form to the bottom of that stretched card is what
+   lines up every button in the row, regardless of whether its topic label
+   wrapped to one line or two. */
+.topic-list form {
+  margin: 0;
+  margin-top: auto;
+  width: 100%;
+}
+
+.topic-list button {
+  width: 100%;
+  padding: 0.5rem 0.9rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--gold);
+  color: var(--black);
+  border: 1px solid var(--gold-ink);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.topic-list button.joined {
+  background: var(--paper);
+  color: var(--gold-ink);
+}
+
+.topic-list button:hover {
+  background: var(--gold-light);
 }

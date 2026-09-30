@@ -22,11 +22,12 @@ const slotLabel = (iso: string) =>
 ---
 
 <Base title="My bookings — Career Central">
+  <div class="prose">
   <h1>My bookings</h1>
   {
     bookings.length === 0 ? (
       <p>
-        No bookings yet — <a href="/">book a query</a>.
+        No bookings yet — <a href="/coaching">book a session</a>.
       </p>
     ) : (
       <ul>
@@ -41,4 +42,5 @@ const slotLabel = (iso: string) =>
       </ul>
     )
   }
+  </div>
 </Base>

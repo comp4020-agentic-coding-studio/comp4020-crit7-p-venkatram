@@ -25,10 +25,10 @@ async function logIn(): Promise<string> {
 }
 
 async function firstOpenSlotId(cookie: string): Promise<string> {
-  const res = await fetch(baseUrl, { headers: { cookie } });
+  const res = await fetch(new URL("/coaching", baseUrl), { headers: { cookie } });
   const html = await res.text();
   const match = html.match(/<select id="slotId"[^>]*>\s*<option value="(\d+)"/);
-  if (!match) throw new Error("no open slot found on the booking page");
+  if (!match) throw new Error("no open slot found on the coaching page");
   return match[1];
 }
 
