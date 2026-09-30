@@ -2,11 +2,14 @@
 
 ANU's real Career Central lets students book appointments, but general-purpose
 booking doesn't fit the specific dread of "I have a job offer and I don't
-understand the contract, or what to do about tax and super." This prototype is
-built around that: a landing page (`/`) framing four things a student actually
-needs — **1:1 coaching** (`/coaching`), **free resources** (`/guides/`),
-a **job listings** directory (`/jobs/`), and a lightweight **community**
-feature (`/community/`) — plus **My bookings** to find a past session again.
+understand the contract, or what to do about tax and super."
+
+This prototype answers that by putting four things a student actually needs
+behind one login, and wiring the core one — coaching — fully end to end
+rather than just mocking it up: a landing page (`/`) framing **1:1 coaching**
+(`/coaching`), **free resources** (`/guides/`), a **job listings** directory
+(`/jobs/`), and a lightweight **community** feature (`/community/`) — plus
+**My bookings** to find a past session again.
 
 The coaching flow is the one wired fully end to end: log in with your student
 ID, pick a category (contract review, tax, superannuation, or another
